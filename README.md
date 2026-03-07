@@ -1,1 +1,1330 @@
-# Talo-Sports-platform-
+# Talo-Sports-platform-import { useState } from "react";
+
+const COLORS = {
+  gold: "#C8881A",
+  goldLight: "#E8A830",
+  navy: "#0D1B3E",
+  navyMid: "#1A2F5E",
+  dark: "#080F1E",
+  white: "#F5F0E8",
+  muted: "#8A95A8",
+  success: "#2ECC8A",
+};
+
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080F1E;
+    color: #F5F0E8;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .talo-app {
+    min-height: 100vh;
+    background: #080F1E;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,15,30,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(200,136,26,0.2);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: #C8881A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 14px;
+    color: #080F1E;
+    letter-spacing: -1px;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #F5F0E8;
+    letter-spacing: 2px;
+  }
+
+  .logo-sub {
+    font-size: 9px;
+    color: #C8881A;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: -2px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-tab {
+    padding: 0 20px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #8A95A8;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-tab:hover { color: #F5F0E8; }
+
+  .nav-tab.active {
+    color: #C8881A;
+  }
+
+  .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: #C8881A;
+  }
+
+  .nav-cta {
+    background: #C8881A;
+    color: #080F1E;
+    border: none;
+    padding: 8px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: #E8A830; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 80px 2rem 60px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,136,26,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,136,26,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(200,136,26,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,136,26,0.1);
+    border: 1px solid rgba(200,136,26,0.3);
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C8881A;
+    margin-bottom: 28px;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #C8881A;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.0;
+    color: #F5F0E8;
+    margin-bottom: 20px;
+  }
+
+  .hero-title span {
+    color: #C8881A;
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    color: #8A95A8;
+    font-weight: 300;
+    max-width: 560px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 32px 0;
+    border-top: 1px solid rgba(200,136,26,0.15);
+    border-bottom: 1px solid rgba(200,136,26,0.15);
+    margin-bottom: 40px;
+  }
+
+  .hero-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #C8881A;
+  }
+
+  .hero-stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8A95A8;
+    margin-top: 4px;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    background: rgba(13,27,62,0.4);
+    border: 1px solid rgba(200,136,26,0.12);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .filter-tab {
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    color: #8A95A8;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .filter-tab:hover { color: #F5F0E8; }
+
+  .filter-tab.active {
+    color: #C8881A;
+    border-bottom-color: #C8881A;
+  }
+
+  /* MAIN CONTENT */
+  .main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 2rem;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sidebar-card {
+    background: rgba(13,27,62,0.3);
+    border: 1px solid rgba(200,136,26,0.12);
+    padding: 20px;
+  }
+
+  .sidebar-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C8881A;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-filter-btn {
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: 1px solid rgba(200,136,26,0.12);
+    color: #8A95A8;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sidebar-filter-btn:hover, .sidebar-filter-btn.active {
+    background: rgba(200,136,26,0.1);
+    border-color: rgba(200,136,26,0.4);
+    color: #F5F0E8;
+  }
+
+  .filter-count {
+    background: rgba(200,136,26,0.2);
+    color: #C8881A;
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .sidebar-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(200,136,26,0.08);
+  }
+
+  .sidebar-metric:last-child { border-bottom: none; }
+
+  .metric-label { font-size: 12px; color: #8A95A8; }
+  .metric-value { font-size: 13px; color: #C8881A; font-weight: 600; }
+
+  /* CARDS GRID */
+  .cards-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #F5F0E8;
+  }
+
+  .section-count {
+    font-size: 12px;
+    color: #8A95A8;
+    letter-spacing: 1px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* MARKETPLACE CARD */
+  .market-card {
+    background: rgba(13,27,62,0.25);
+    border: 1px solid rgba(200,136,26,0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .market-card:hover {
+    border-color: rgba(200,136,26,0.4);
+    transform: translateY(-3px);
+    background: rgba(13,27,62,0.5);
+  }
+
+  .market-card:hover .card-hover-bar {
+    width: 100%;
+  }
+
+  .card-hover-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #C8881A, #E8A830);
+    transition: width 0.4s ease;
+  }
+
+  .card-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .card-type-badge {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    background: rgba(200,136,26,0.1);
+    color: #C8881A;
+    border: 1px solid rgba(200,136,26,0.2);
+  }
+
+  .card-verified {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #2ECC8A;
+  }
+
+  .card-body {
+    padding: 0 20px 20px;
+  }
+
+  .card-org {
+    font-size: 11px;
+    color: #C8881A;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #F5F0E8;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: #8A95A8;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .card-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(200,136,26,0.08);
+    border-bottom: 1px solid rgba(200,136,26,0.08);
+    margin-bottom: 16px;
+  }
+
+  .card-metric-val {
+    font-size: 15px;
+    font-weight: 600;
+    color: #F5F0E8;
+  }
+
+  .card-metric-lbl {
+    font-size: 9px;
+    color: #8A95A8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #C8881A;
+  }
+
+  .card-value-lbl {
+    font-size: 10px;
+    color: #8A95A8;
+    margin-top: 1px;
+  }
+
+  .card-action-btn {
+    background: rgba(200,136,26,0.1);
+    border: 1px solid rgba(200,136,26,0.3);
+    color: #C8881A;
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .card-action-btn:hover {
+    background: #C8881A;
+    color: #080F1E;
+  }
+
+  /* FEATURED CARD */
+  .featured-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(200,136,26,0.08) 0%, rgba(13,27,62,0.4) 60%);
+    border: 1px solid rgba(200,136,26,0.25);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .featured-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #C8881A;
+    color: #080F1E;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    font-weight: 600;
+  }
+
+  .featured-left {
+    padding: 32px;
+  }
+
+  .featured-right {
+    padding: 32px;
+    border-left: 1px solid rgba(200,136,26,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* ATHLETE CARD */
+  .athlete-card {
+    background: rgba(13,27,62,0.25);
+    border: 1px solid rgba(200,136,26,0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .athlete-card:hover {
+    border-color: rgba(200,136,26,0.4);
+    transform: translateY(-3px);
+  }
+
+  .athlete-header {
+    background: linear-gradient(135deg, rgba(200,136,26,0.15), rgba(13,27,62,0.5));
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .athlete-avatar {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #C8881A, #E8A830);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #080F1E;
+    flex-shrink: 0;
+  }
+
+  .athlete-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #F5F0E8;
+  }
+
+  .athlete-sport {
+    font-size: 11px;
+    color: #C8881A;
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+
+  .athlete-body {
+    padding: 16px 20px 20px;
+  }
+
+  .athlete-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .athlete-stat {
+    background: rgba(200,136,26,0.05);
+    border: 1px solid rgba(200,136,26,0.08);
+    padding: 10px;
+  }
+
+  .athlete-stat-val {
+    font-size: 16px;
+    font-weight: 600;
+    color: #F5F0E8;
+  }
+
+  .athlete-stat-lbl {
+    font-size: 9px;
+    color: #8A95A8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid rgba(200,136,26,0.2);
+    color: #C8881A;
+  }
+
+  /* SUMMIT BANNER */
+  .summit-banner {
+    background: linear-gradient(135deg, #0D1B3E 0%, #1A2F5E 50%, #0D1B3E 100%);
+    border: 1px solid rgba(200,136,26,0.3);
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summit-banner::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(200,136,26,0.15), transparent 70%);
+  }
+
+  .summit-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C8881A;
+    margin-bottom: 8px;
+  }
+
+  .summit-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #F5F0E8;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .summit-date {
+    font-size: 13px;
+    color: #8A95A8;
+  }
+
+  .summit-cta {
+    background: #C8881A;
+    color: #080F1E;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .summit-cta:hover { background: #E8A830; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,15,30,0.9);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .modal {
+    background: #0D1B3E;
+    border: 1px solid rgba(200,136,26,0.3);
+    max-width: 680px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, rgba(200,136,26,0.15), transparent);
+    padding: 28px;
+    border-bottom: 1px solid rgba(200,136,26,0.15);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: 1px solid rgba(200,136,26,0.3);
+    color: #8A95A8;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover { color: #F5F0E8; border-color: #C8881A; }
+
+  .modal-body {
+    padding: 28px;
+  }
+
+  .modal-section {
+    margin-bottom: 24px;
+  }
+
+  .modal-section-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C8881A;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(200,136,26,0.1);
+  }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .modal-field {
+    background: rgba(200,136,26,0.05);
+    border: 1px solid rgba(200,136,26,0.08);
+    padding: 12px;
+  }
+
+  .modal-field-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8A95A8;
+    margin-bottom: 4px;
+  }
+
+  .modal-field-value {
+    font-size: 14px;
+    color: #F5F0E8;
+    font-weight: 500;
+  }
+
+  .modal-action {
+    background: #C8881A;
+    color: #080F1E;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+
+  .modal-action:hover { background: #E8A830; }
+
+  .modal-secondary {
+    background: transparent;
+    color: #C8881A;
+    border: 1px solid rgba(200,136,26,0.3);
+    width: 100%;
+    padding: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .modal-secondary:hover {
+    background: rgba(200,136,26,0.1);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #080F1E; }
+  ::-webkit-scrollbar-thumb { background: rgba(200,136,26,0.3); }
+`;
+
+const SPONSORSHIPS = [
+  {
+    id: 1,
+    type: "League Sponsorship",
+    featured: true,
+    org: "Football Kenya Federation",
+    title: "FKF Premier League — Title Naming Rights 2026/27",
+    desc: "Exclusive naming rights for Kenya's top-flight football league. 18 clubs, 306 matches, national broadcast coverage across 4 channels and streaming platforms.",
+    metrics: [{ val: "2.4M", lbl: "Fan Reach" }, { val: "18", lbl: "Clubs" }, { val: "4", lbl: "Broadcasters" }],
+    value: "USD 850,000",
+    valueLbl: "Asking value",
+    assets: ["Full naming rights", "Jersey patch – all 18 clubs", "Broadcast integration", "Digital & social integration", "Stadium branding – all venues", "Fan engagement rights"],
+    audience: { size: "2.4M", demo: "18–45 Male, 68%", geo: "Kenya, East Africa", digital: "890K social followers" },
+    history: "Kenya Commercial Bank 2023/24 — KES 80M"
+  },
+  {
+    id: 2,
+    type: "Kit Sponsorship",
+    org: "Athletics Kenya",
+    title: "National Athletics Team — Kit & Apparel Partnership",
+    desc: "Official kit supplier and front-of-jersey sponsor for Kenya's national athletics team competing at World Athletics, Commonwealth Games, and Olympic qualifiers.",
+    metrics: [{ val: "1.8B+", lbl: "Global Viewers" }, { val: "12", lbl: "Intl Events" }, { val: "6", lbl: "World Records" }],
+    value: "USD 420,000",
+    valueLbl: "Annual value",
+    assets: ["Kit supply & branding", "Broadcast exposure – global", "Athlete personal endorsement", "Event presenting rights"],
+    audience: { size: "1.8B global", demo: "Sports enthusiasts globally", geo: "200+ countries", digital: "4.2M combined following" },
+    history: "Nike 2018–2022"
+  },
+  {
+    id: 3,
+    type: "Event Sponsorship",
+    org: "Safaricom Athletics",
+    title: "Nairobi Marathon 2026 — Presenting Sponsor",
+    desc: "East Africa's most prestigious road race. 26,000 runners, 80,000 spectators, live broadcast across 12 channels. Strong diaspora and international tourism activation.",
+    metrics: [{ val: "26K", lbl: "Runners" }, { val: "80K", lbl: "Spectators" }, { val: "78", lbl: "Countries" }],
+    value: "USD 280,000",
+    valueLbl: "Presenting sponsor",
+    assets: ["Title naming rights", "Finish line branding", "Broadcast presenting rights", "Runner pack inclusion", "VIP hospitality"],
+    audience: { size: "80K live + 3.2M TV", demo: "ABC1, 25–54", geo: "Kenya + 78 countries", digital: "2.1M reach" },
+    history: "Safaricom 2019–2024"
+  },
+  {
+    id: 4,
+    type: "Club Sponsorship",
+    org: "Kenya Rugby Union",
+    title: "Kenya Sevens — Official Shirt Front Sponsor",
+    desc: "Front-of-jersey sponsor for Kenya's iconic Sevens team, competing across the full HSBC World Rugby Sevens Series including Cape Town, Dubai, and Hong Kong.",
+    metrics: [{ val: "500K+", lbl: "Global Viewers" }, { val: "9", lbl: "Tour Legs" }, { val: "Top 6", lbl: "World Ranked" }],
+    value: "USD 195,000",
+    valueLbl: "Per series season",
+    assets: ["Front of jersey", "Global broadcast branding", "Digital & social rights", "Player ambassador programme"],
+    audience: { size: "500K per event", demo: "Premium sports audience", geo: "Global – 9 countries", digital: "1.8M followers" },
+    history: "Kenya Airways, Equity Bank"
+  },
+];
+
+const ATHLETES = [
+  { id: 10, initials: "FO", name: "Faith Odhiambo", sport: "Athletics — Marathon", nationality: "Kenya", following: "1.2M", engRate: "4.8%", achievements: "Tokyo Olympic Qualifier · 2:21:34 PB", available: ["Apparel", "Nutrition", "Finance", "Lifestyle"], mgmtFee: "18%" },
+  { id: 11, initials: "BK", name: "Brian Kamau", sport: "Rugby Sevens", nationality: "Kenya", following: "380K", engRate: "6.2%", achievements: "Kenya 7s Captain · World Series Finalist", available: ["Sports brands", "Banking", "Telecom", "Energy"], mgmtFee: "15%" },
+  { id: 12, initials: "AW", name: "Aisha Wanjiku", sport: "Athletics — 800m", nationality: "Kenya", following: "2.8M", engRate: "7.1%", achievements: "Commonwealth Silver · World Athletics Top 10", available: ["Luxury", "Apparel", "Banking", "Wellness"], mgmtFee: "20%" },
+  { id: 13, initials: "JO", name: "James Otieno", sport: "Football — Midfielder", nationality: "Kenya", following: "890K", engRate: "5.3%", achievements: "FKF Premier League MVP · Harambee Stars Regular", available: ["Sportswear", "Telecom", "FMCG", "Betting"], mgmtFee: "18%" },
+];
+
+const NAV_ITEMS = ["Marketplace", "Athletes", "Investments", "Fan Economy", "Intelligence"];
+const FILTER_TABS = ["All Opportunities", "Sponsorships", "Kit & Apparel", "Event Rights", "Media Rights", "Community & CSR"];
+
+export default function TALOMarketplace() {
+  const [activeNav, setActiveNav] = useState("Marketplace");
+  const [activeFilter, setActiveFilter] = useState("All Opportunities");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedAthlete, setSelectedAthlete] = useState(null);
+  const [sidebarFilter, setSidebarFilter] = useState("All Sports");
+
+  const sidebarFilters = [
+    { label: "All Sports", count: 47 },
+    { label: "Football", count: 14 },
+    { label: "Athletics", count: 11 },
+    { label: "Rugby", count: 8 },
+    { label: "Basketball", count: 6 },
+    { label: "Swimming", count: 4 },
+    { label: "Cricket", count: 4 },
+  ];
+
+  return (
+    <>
+      <style>{styles}</style>
+      <div className="talo-app">
+        <div className="noise-overlay" />
+
+        {/* NAV */}
+        <nav className="nav">
+          <div className="nav-logo">
+            <div className="logo-mark">T</div>
+            <div>
+              <div className="logo-text">TALO</div>
+              <div className="logo-sub">Sports Platform</div>
+            </div>
+          </div>
+          <div className="nav-tabs">
+            {NAV_ITEMS.map(item => (
+              <button key={item} className={`nav-tab ${activeNav === item ? "active" : ""}`} onClick={() => setActiveNav(item)}>
+                {item}
+              </button>
+            ))}
+          </div>
+          <button className="nav-cta">List Property</button>
+        </nav>
+
+        {/* HERO */}
+        {activeNav === "Marketplace" && (
+          <>
+            <section className="hero">
+              <div className="hero-grid" />
+              <div className="hero-glow" />
+              <div className="hero-content">
+                <div className="hero-badge">
+                  <div className="hero-badge-dot" />
+                  Africa's Sports Commerce Operating System
+                </div>
+                <h1 className="hero-title">
+                  The Central Exchange
+                  <span>for African Sport</span>
+                </h1>
+                <p className="hero-subtitle">
+                  Connect athletes, federations, brands, and investors through Africa's first structured sports commerce platform. Every partnership. Every deal. One infrastructure.
+                </p>
+                <div className="hero-stats">
+                  <div>
+                    <div className="hero-stat-value">47</div>
+                    <div className="hero-stat-label">Active Listings</div>
+                  </div>
+                  <div>
+                    <div className="hero-stat-value">USD 4.2M</div>
+                    <div className="hero-stat-label">Total Deal Value</div>
+                  </div>
+                  <div>
+                    <div className="hero-stat-value">120+</div>
+                    <div className="hero-stat-label">Verified Athletes</div>
+                  </div>
+                  <div>
+                    <div className="hero-stat-value">18</div>
+                    <div className="hero-stat-label">Federations</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* FILTER BAR */}
+            <div className="filter-bar">
+              {FILTER_TABS.map(tab => (
+                <button key={tab} className={`filter-tab ${activeFilter === tab ? "active" : ""}`} onClick={() => setActiveFilter(tab)}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {/* MAIN CONTENT */}
+            <div className="main-content">
+              {/* SIDEBAR */}
+              <aside className="sidebar">
+                <div className="sidebar-card">
+                  <div className="sidebar-title">Filter by Sport</div>
+                  {sidebarFilters.map(f => (
+                    <button
+                      key={f.label}
+                      className={`sidebar-filter-btn ${sidebarFilter === f.label ? "active" : ""}`}
+                      onClick={() => setSidebarFilter(f.label)}
+                    >
+                      {f.label}
+                      <span className="filter-count">{f.count}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="sidebar-card">
+                  <div className="sidebar-title">Market Intelligence</div>
+                  {[
+                    { label: "Avg Sponsorship Value", value: "USD 89K" },
+                    { label: "Q1 2026 Deal Volume", value: "+34%" },
+                    { label: "Top Sport", value: "Athletics" },
+                    { label: "Fastest Growing", value: "Football" },
+                    { label: "Active Brands", value: "62" },
+                  ].map(m => (
+                    <div key={m.label} className="sidebar-metric">
+                      <span className="metric-label">{m.label}</span>
+                      <span className="metric-value">{m.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="sidebar-card" style={{ background: "linear-gradient(135deg, rgba(200,136,26,0.1), rgba(13,27,62,0.3))", borderColor: "rgba(200,136,26,0.25)" }}>
+                  <div className="sidebar-title">Advisory Studio</div>
+                  <p style={{ fontSize: 12, color: "#8A95A8", lineHeight: 1.6, marginBottom: 14 }}>
+                    Need help structuring your sponsorship assets? Our commercial team works with you end-to-end.
+                  </p>
+                  <button className="card-action-btn" style={{ width: "100%", textAlign: "center" }}>
+                    Enquire Now
+                  </button>
+                </div>
+              </aside>
+
+              {/* CARDS */}
+              <div className="cards-section">
+                <div className="section-header">
+                  <div className="section-title">Sponsorship Opportunities</div>
+                  <div className="section-count">47 listings · Sorted by value</div>
+                </div>
+
+                {/* SUMMIT BANNER */}
+                <div className="summit-banner">
+                  <div>
+                    <div className="summit-label">Upcoming · Q4 2026 · Nairobi</div>
+                    <div className="summit-title">TALO Sports Data &<br />Economy Summit</div>
+                    <div className="summit-date">Data to Revenue: Commercialising Kenya's Sports Economy</div>
+                  </div>
+                  <button className="summit-cta">View Summit →</button>
+                </div>
+
+                <div className="cards-grid">
+                  {/* FEATURED CARD */}
+                  <div className="featured-card">
+                    <div className="featured-tag">Featured Opportunity</div>
+                    <div className="featured-left">
+                      <div className="card-type-badge" style={{ marginBottom: 12 }}>League Sponsorship</div>
+                      <div className="card-org">Football Kenya Federation</div>
+                      <div className="card-title">FKF Premier League<br />Title Naming Rights 2026/27</div>
+                      <p className="card-desc">Exclusive naming rights for Kenya's top-flight football league. 18 clubs, 306 matches, national broadcast coverage across 4 channels.</p>
+                      <div className="card-metrics">
+                        <div><div className="card-metric-val">2.4M</div><div className="card-metric-lbl">Fan Reach</div></div>
+                        <div><div className="card-metric-val">18</div><div className="card-metric-lbl">Clubs</div></div>
+                        <div><div className="card-metric-val">4</div><div className="card-metric-lbl">Broadcasters</div></div>
+                      </div>
+                    </div>
+                    <div className="featured-right">
+                      <div>
+                        <div style={{ fontSize: 10, color: "#8A95A8", letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>Asking Value</div>
+                        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: "#C8881A", marginBottom: 4 }}>USD 850,000</div>
+                        <div style={{ fontSize: 11, color: "#8A95A8" }}>Per season · Negotiable</div>
+                      </div>
+                      <div>
+                        <div className="tag-list" style={{ marginBottom: 16 }}>
+                          {["Full naming rights", "Jersey branding", "Broadcast integration", "Digital rights"].map(t => (
+                            <span key={t} className="tag">{t}</span>
+                          ))}
+                        </div>
+                        <button className="card-action-btn" style={{ width: "100%", textAlign: "center", padding: "12px 16px" }} onClick={() => setSelectedItem(SPONSORSHIPS[0])}>
+                          View Full Package →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* REGULAR CARDS */}
+                  {SPONSORSHIPS.slice(1).map(s => (
+                    <div key={s.id} className="market-card" onClick={() => setSelectedItem(s)}>
+                      <div className="card-hover-bar" />
+                      <div className="card-header">
+                        <div className="card-type-badge">{s.type}</div>
+                        <div className="card-verified">✓ Verified</div>
+                      </div>
+                      <div className="card-body">
+                        <div className="card-org">{s.org}</div>
+                        <div className="card-title">{s.title}</div>
+                        <p className="card-desc">{s.desc}</p>
+                        <div className="card-metrics">
+                          {s.metrics.map((m, i) => (
+                            <div key={i}>
+                              <div className="card-metric-val">{m.val}</div>
+                              <div className="card-metric-lbl">{m.lbl}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="card-footer">
+                          <div>
+                            <div className="card-value">{s.value}</div>
+                            <div className="card-value-lbl">{s.valueLbl}</div>
+                          </div>
+                          <button className="card-action-btn">View Package</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ATHLETES VIEW */}
+        {activeNav === "Athletes" && (
+          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 2rem" }}>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: "#F5F0E8", marginBottom: 8 }}>
+                Athlete Economy
+              </div>
+              <p style={{ fontSize: 14, color: "#8A95A8" }}>Kenya's most commercially underexploited sports asset. Verified athlete profiles with real data.</p>
+            </div>
+            <div className="cards-grid">
+              {ATHLETES.map(a => (
+                <div key={a.id} className="athlete-card" onClick={() => setSelectedAthlete(a)}>
+                  <div className="athlete-header">
+                    <div className="athlete-avatar">{a.initials}</div>
+                    <div>
+                      <div className="athlete-name">{a.name}</div>
+                      <div className="athlete-sport">{a.sport}</div>
+                      <div className="card-verified" style={{ marginTop: 4 }}>✓ Verified · {a.nationality}</div>
+                    </div>
+                  </div>
+                  <div className="athlete-body">
+                    <div className="athlete-stats">
+                      <div className="athlete-stat">
+                        <div className="athlete-stat-val">{a.following}</div>
+                        <div className="athlete-stat-lbl">Following</div>
+                      </div>
+                      <div className="athlete-stat">
+                        <div className="athlete-stat-val">{a.engRate}</div>
+                        <div className="athlete-stat-lbl">Eng Rate</div>
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 11, color: "#8A95A8", marginBottom: 12, lineHeight: 1.5 }}>{a.achievements}</p>
+                    <div className="tag-list">
+                      {a.available.map(t => <span key={t} className="tag">{t}</span>)}
+                    </div>
+                    <div className="card-footer">
+                      <div>
+                        <div className="card-value">{a.mgmtFee}</div>
+                        <div className="card-value-lbl">TALO management fee</div>
+                      </div>
+                      <button className="card-action-btn">Enquire</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* OTHER VIEWS */}
+        {(activeNav === "Investments" || activeNav === "Fan Economy" || activeNav === "Intelligence") && (
+          <div style={{ maxWidth: 900, margin: "0 auto", padding: "80px 2rem", textAlign: "center" }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 48, fontWeight: 700, color: "#C8881A", marginBottom: 16 }}>
+              Coming Q4 2026
+            </div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: "#F5F0E8", marginBottom: 12 }}>
+              {activeNav} Module
+            </div>
+            <p style={{ fontSize: 14, color: "#8A95A8", maxWidth: 480, margin: "0 auto 32px", lineHeight: 1.7 }}>
+              This module launches at the TALO Sports Data & Economy Summit, Q4 2026. Register your interest to be a founding member.
+            </p>
+            <button className="nav-cta" style={{ padding: "14px 32px", fontSize: 13 }}>Register Interest</button>
+          </div>
+        )}
+
+        {/* SPONSORSHIP MODAL */}
+        {selectedItem && (
+          <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
+            <div className="modal" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <button className="modal-close" onClick={() => setSelectedItem(null)}>✕</button>
+                <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "#C8881A", marginBottom: 6 }}>{selectedItem.type} · Verified</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "#F5F0E8", marginBottom: 4 }}>{selectedItem.title}</div>
+                <div style={{ fontSize: 12, color: "#8A95A8" }}>{selectedItem.org}</div>
+              </div>
+              <div className="modal-body">
+                <div className="modal-section">
+                  <div className="modal-section-title">Package Overview</div>
+                  <p style={{ fontSize: 13, color: "#8A95A8", lineHeight: 1.7 }}>{selectedItem.desc}</p>
+                </div>
+                <div className="modal-section">
+                  <div className="modal-section-title">Audience Data</div>
+                  <div className="modal-grid">
+                    {Object.entries(selectedItem.audience).map(([k, v]) => (
+                      <div key={k} className="modal-field">
+                        <div className="modal-field-label">{k}</div>
+                        <div className="modal-field-value">{v}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="modal-section">
+                  <div className="modal-section-title">Sponsorship Assets Included</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {selectedItem.assets.map(a => (
+                      <span key={a} className="tag" style={{ padding: "6px 10px", fontSize: 10 }}>✓ {a}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="modal-section">
+                  <div className="modal-section-title">Commercial History</div>
+                  <p style={{ fontSize: 12, color: "#8A95A8" }}>{selectedItem.history}</p>
+                </div>
+                <div style={{ background: "rgba(200,136,26,0.05)", border: "1px solid rgba(200,136,26,0.2)", padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontSize: 10, color: "#8A95A8", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>Asking Value</div>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: "#C8881A" }}>{selectedItem.value}</div>
+                  <div style={{ fontSize: 11, color: "#8A95A8", marginTop: 2 }}>All negotiations facilitated by TALO Advisory Studio · 10% transaction fee applies</div>
+                </div>
+                <button className="modal-action">Request Partnership Conversation</button>
+                <button className="modal-secondary">Download Commercial Package</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ATHLETE MODAL */}
+        {selectedAthlete && (
+          <div className="modal-overlay" onClick={() => setSelectedAthlete(null)}>
+            <div className="modal" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <button className="modal-close" onClick={() => setSelectedAthlete(null)}>✕</button>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div className="athlete-avatar" style={{ width: 56, height: 56, fontSize: 22, flexShrink: 0 }}>{selectedAthlete.initials}</div>
+                  <div>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "#F5F0E8" }}>{selectedAthlete.name}</div>
+                    <div style={{ fontSize: 12, color: "#C8881A", marginTop: 3 }}>{selectedAthlete.sport}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-body">
+                <div className="modal-section">
+                  <div className="modal-section-title">Audience & Reach</div>
+                  <div className="modal-grid">
+                    {[
+                      { label: "Total Following", value: selectedAthlete.following },
+                      { label: "Engagement Rate", value: selectedAthlete.engRate },
+                      { label: "Nationality", value: selectedAthlete.nationality },
+                      { label: "Management Fee", value: selectedAthlete.mgmtFee },
+                    ].map(f => (
+                      <div key={f.label} className="modal-field">
+                        <div className="modal-field-label">{f.label}</div>
+                        <div className="modal-field-value">{f.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="modal-section">
+                  <div className="modal-section-title">Career Achievements</div>
+                  <p style={{ fontSize: 13, color: "#8A95A8" }}>{selectedAthlete.achievements}</p>
+                </div>
+                <div className="modal-section">
+                  <div className="modal-section-title">Available Endorsement Categories</div>
+                  <div className="tag-list">
+                    {selectedAthlete.available.map(t => <span key={t} className="tag" style={{ padding: "6px 12px" }}>{t}</span>)}
+                  </div>
+                </div>
+                <button className="modal-action">Request Endorsement Conversation</button>
+                <button className="modal-secondary">Download Athlete Brand Profile</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
